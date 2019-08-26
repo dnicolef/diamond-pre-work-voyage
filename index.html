@@ -170,71 +170,70 @@
 
    
 
-						
 						<script>
+							
+							
+							window.onscroll = function() {scrollFunction()};
 
-    // HTML document is loaded. DOM is ready.
-    $(function() {  
+const button = document.getElementById("btnTop");
 
-    // Parallax
-        $('.intro-section').parallax({
-        	imageSrc: 'img/bg-1.jpg',
-        	speed: 0.2
-        });
-        $('.services-section').parallax({
-        	imageSrc: 'img/bg-2.jpg',
-        	speed: 0.2
-    	});
-        $('.contact-section').parallax({
-        	imageSrc: 'img/bg-3.jpg',
-        	speed: 0.2
-        });    
+function removeClass(){     //Removes 'btnEnter' class when called from Event Listener
+    button.classList.remove('btnEnter');    
+}
 
-        // jQuery Scroll Up / Back To Top Image
-        $.scrollUp({
-                scrollName: 'scrollUp',      // Element ID
-		        scrollDistance: 300,         // Distance from top/bottom before showing element (px)
-		        scrollFrom: 'top',           // 'top' or 'bottom'
-		        scrollSpeed: 1000,            // Speed back to top (ms)
-		        easingType: 'linear',        // Scroll to top easing (see http://easings.net/)
-		        animation: 'fade',           // Fade, slide, none
-		        animationSpeed: 300,         // Animation speed (ms)		        
-		        scrollText: '', // Text for element, can contain HTML		        
-		        scrollImg: true            // Set true to use image		        
-            });
+function scrollFunction() {
+  if (document.body.scrollTop > 75 || document.documentElement.scrollTop > 75) {
+      if (button.style.display == "none") {     // When scrolled below 75px and the button was previously hidden...
+        button.style.display = "block";         // display button as block and...
+        setTimeout(function(){ btnTop.classList.add('btnEnter'); }, 0005);  // add 'btnEnter' class after 0005ms and...
+        button.addEventListener('transitionend', removeClass);  // listen for 'btnEnter' transition to end and remove 'btnEnter' class
+    } else { button.style.display = "block"}    // If scrolled below 75px and button is not hidden - remain not hidden
+  } else {
+    button.style.display = "none";  // If scrolled above 75px - hide button...
+    removeClass();    //and remove 'btnEnter' class    
+  }
+}
 
-        // ScrollUp Placement
-        $( window ).on( 'scroll', function() {
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollIntoView({behavior: "smooth", block: "start"});  //For Safari
+  document.documentElement.scrollIntoView({behavior: "smooth", block: "start"});   // For Chrome, Firefox, IE and Opera
+}
+//Base code copy/pasted from https://www.w3schools.com/howto/howto_js_scroll_to_top.asp
+//Transition code added by Daniel Dick
 
-            // If the height of the document less the height of the document is the same as the
-            // distance the window has scrolled from the top...
-            if ( $( document ).height() - $( window ).height() === $( window ).scrollTop() ) {
 
-                // Adjust the scrollUp image so that it's a few pixels above the footer
-                $('#scrollUp').css( 'bottom', '80px' );
+// PARALLAX
 
-            } else {      
-                // Otherwise, leave set it to its default value.
-                $('#scrollUp').css( 'bottom', '30px' );        
-            }
-        });
+const parallax = document.querySelectorAll('.parallax');
 
-        $('.single-page-nav').singlePageNav({
-        	offset: $('.single-page-nav').outerHeight(),
-        	speed: 1500,
-        	filter: ':not(.external)',
-        	updateHash: true
-        });
+window.addEventListener('scroll', function(){
+  const target = document.querySelectorAll('.parallax');
+  target.forEach(prllx => {
+    let pos = (window.pageYOffset - prllx.offsetTop) * prllx.dataset.rate + 'px';
+    prllx.style.backgroundPositionY = pos;
+});
+})
+// This base code taken from DesignCourse: https://www.youtube.com/watch?v=Dxm6EwvQIl8 //
 
-        $('.navbar-toggle').click(function(){
-        	$('.single-page-nav').toggleClass('show');
-        });
 
-        $('.single-page-nav a').click(function(){
-        	$('.single-page-nav').removeClass('show');
-        });
-        
-    });
+//SMOOTH SCROLL
+const links = document.querySelectorAll(".navList_item");
+
+links.forEach(link => link.addEventListener('click', scroll));    
+
+function scroll(e) {
+  e.preventDefault();
+  const targetId = e.target.getAttribute('href');
+  const destination = document.querySelector(targetId).offsetTop;
+  window.scrollTo({
+    top: destination,
+    left: 0,
+    behavior: 'smooth'
+  });
+}
+
+   
 </script>
 </body>
 </html>
